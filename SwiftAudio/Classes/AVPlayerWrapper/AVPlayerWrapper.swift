@@ -171,7 +171,7 @@ class AVPlayerWrapper: AVPlayerWrapperProtocol {
     
     
     
-    func load(from url: URL, playWhenReady: Bool, options: [String: Any]? = nil) {
+    func load(from url: URL, playWhenReady: Bool, options: [String: Any]? = nil, bitRate: Double) {
         reset(soft: true)
         _playWhenReady = playWhenReady
 
@@ -206,6 +206,8 @@ class AVPlayerWrapper: AVPlayerWrapperProtocol {
                             self.playerObserver.startObserving()
                             self.playerItemNotificationObserver.startObserving(item: currentItem)
                             self.playerItemObserver.startObserving(item: currentItem)
+                            
+                            currentItem.preferredPeakBitRate = bitRate
                         }
                         break
                         
@@ -227,10 +229,10 @@ class AVPlayerWrapper: AVPlayerWrapperProtocol {
         }
     }
     
-    func load(from url: URL, playWhenReady: Bool, initialTime: TimeInterval? = nil, options: [String : Any]? = nil) {
+    func load(from url: URL, playWhenReady: Bool, initialTime: TimeInterval? = nil, options: [String : Any]? = nil, bitRate: Double) {
         _initialTime = initialTime
         self.pause()
-        self.load(from: url, playWhenReady: playWhenReady, options: options)
+        self.load(from: url, playWhenReady: playWhenReady, options: options, bitRate: bitRate)
     }
     
     // MARK: - Util

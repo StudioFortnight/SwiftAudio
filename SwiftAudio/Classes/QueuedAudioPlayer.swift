@@ -70,8 +70,8 @@ public class QueuedAudioPlayer: AudioPlayer {
      - parameter item: The AudioItem to replace the current item.
      - throws: APError.LoadError
      */
-    public override func load(item: AudioItem, playWhenReady: Bool) throws {
-        try super.load(item: item, playWhenReady: playWhenReady)
+    public override func load(item: AudioItem, playWhenReady: Bool, bitRate: Double) throws {
+        try super.load(item: item, playWhenReady: playWhenReady, bitRate: bitRate)
         queueManager.replaceCurrentItem(with: item)
     }
     
@@ -82,10 +82,10 @@ public class QueuedAudioPlayer: AudioPlayer {
      - parameter playWhenReady: If the AudioPlayer has no item loaded, it will load the `item`. If this is `true` it will automatically start playback. Default is `true`.
      - throws: `APError`
      */
-    public func add(item: AudioItem, playWhenReady: Bool = true) throws {
+    public func add(item: AudioItem, playWhenReady: Bool = true, bitRate: Double = 320000) throws {
         if currentItem == nil {
             queueManager.addItem(item)
-            try self.load(item: item, playWhenReady: playWhenReady)
+            try self.load(item: item, playWhenReady: playWhenReady, bitRate: bitRate)
         }
         else {
             queueManager.addItem(item)
@@ -99,10 +99,10 @@ public class QueuedAudioPlayer: AudioPlayer {
      - parameter playWhenReady: If the AudioPlayer has no item loaded, it will load the first item in the list. If this is `true` it will automatically start playback. Default is `true`.
      - throws: `APError`
      */
-    public func add(items: [AudioItem], playWhenReady: Bool = true) throws {
+    public func add(items: [AudioItem], playWhenReady: Bool = true, bitRate: Double = 320000) throws {
         if currentItem == nil {
             queueManager.addItems(items)
-            try self.load(item: currentItem!, playWhenReady: playWhenReady)
+            try self.load(item: currentItem!, playWhenReady: playWhenReady, bitRate: bitRate)
         }
         else {
             queueManager.addItems(items)
