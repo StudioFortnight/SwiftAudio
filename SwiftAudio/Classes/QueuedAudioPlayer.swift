@@ -64,6 +64,8 @@ public class QueuedAudioPlayer: AudioPlayer {
         return queueManager.nextItems
     }
     
+    var preferredBitRate: Double = 320000
+    
     /**
      Will replace the current item with a new one and load it into the player.
      
@@ -72,6 +74,7 @@ public class QueuedAudioPlayer: AudioPlayer {
      */
     public override func load(item: AudioItem, playWhenReady: Bool, bitRate: Double) throws {
         try super.load(item: item, playWhenReady: playWhenReady, bitRate: bitRate)
+        preferredBitRate = bitRate
         queueManager.replaceCurrentItem(with: item)
     }
     
@@ -83,6 +86,7 @@ public class QueuedAudioPlayer: AudioPlayer {
      - throws: `APError`
      */
     public func add(item: AudioItem, playWhenReady: Bool = true, bitRate: Double = 320000) throws {
+        preferredBitRate = bitRate
         if currentItem == nil {
             queueManager.addItem(item)
             try self.load(item: item, playWhenReady: playWhenReady, bitRate: bitRate)
@@ -100,6 +104,7 @@ public class QueuedAudioPlayer: AudioPlayer {
      - throws: `APError`
      */
     public func add(items: [AudioItem], playWhenReady: Bool = true, bitRate: Double = 320000) throws {
+        preferredBitRate = bitRate
         if currentItem == nil {
             queueManager.addItems(items)
             try self.load(item: currentItem!, playWhenReady: playWhenReady, bitRate: bitRate)
@@ -121,7 +126,7 @@ public class QueuedAudioPlayer: AudioPlayer {
     public func next() throws {
         event.playbackEnd.emit(data: .skippedToNext)
         let nextItem = try queueManager.next()
-        try self.load(item: nextItem, playWhenReady: true)
+        try self.load(item: nextItem, playWhenReady: true, bitRate: preferredBitRate)
     }
     
     /**
@@ -130,7 +135,7 @@ public class QueuedAudioPlayer: AudioPlayer {
     public func previous() throws {
         event.playbackEnd.emit(data: .skippedToPrevious)
         let previousItem = try queueManager.previous()
-        try self.load(item: previousItem, playWhenReady: true)
+        try self.load(item: previousItem, playWhenReady: true, bitRate: preferredBitRate)
     }
     
     /**
@@ -153,7 +158,7 @@ public class QueuedAudioPlayer: AudioPlayer {
     public func jumpToItem(atIndex index: Int, playWhenReady: Bool = true) throws {
         event.playbackEnd.emit(data: .jumpedToIndex)
         let item = try queueManager.jump(to: index)
-        try self.load(item: item, playWhenReady: playWhenReady)
+        try self.load(item: item, playWhenReady: playWhenReady, bitRate: preferredBitRate)
     }
     
     /**
